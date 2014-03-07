@@ -34,7 +34,7 @@ module Spree
       end
 
       def payment
-        payment_id = params[:merchant_reference].split('-')[-1]
+        payment_id = params[:merchantReference].split('-')[-1]
         @payment ||= current_order.payments.find(payment_id)
       end
 
