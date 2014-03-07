@@ -32,11 +32,27 @@ module Spree
     end
 
     def method_type
-      "adyen"
+      'adyen'
     end
 
-    def payment_profiles_supported?
-      true
+    def redirect_url(payment, adyen_confirmation_url)
+      redirect_params = {
+        currency_code: Spree::Config.currency,
+        ship_before_date: Date.tomorrow,
+        session_validity: 10.minutes.from_now,
+        recurring: false,
+        merchant_reference: "#{payment.order.number}-#{payment.id}",
+        merchant_account: preferred_merchant_account,
+        skin_code: preferred_skin_code,
+        shared_secret: preferred_shared_secret,
+        payment_amount: (payment.amount.to_f * 100).to_int
+      }
+
+      ::Adyen::Form.redirect_url(
+        Rails.env.development? ?
+          redirect_params.merge(resURL: adyen_confirmation_url) :
+          redirect_params
+      )
     end
   end
 end

@@ -1,6 +1,6 @@
 module Spree
   class AdyenRedirectController < StoreController
-    before_filter :check_signature, :only => :confirm
+    before_filter :check_signature, only: :confirm
 
     def confirm
       order = current_order
@@ -13,17 +13,14 @@ module Spree
       # cant set payment to complete here due to a validation
       # in order transition from payment to complete (it requires at
       # least one pending payment)
-      payment = order.payments.create!(
-        :amount => order.total,
-        :payment_method => payment_method,
-        :response_code => params[:pspReference]
-      )
+      payment.update!({ response_code: params[:pspReference] })
+      payment.pend!
 
       order.next
 
       if order.complete?
         flash.notice = Spree.t(:order_processed_successfully)
-        redirect_to order_path(order, :token => order.token)
+        redirect_to order_path(order, token: order.token)
       else
         redirect_to checkout_state_path(order.state)
       end
@@ -36,10 +33,13 @@ module Spree
         end
       end
 
-      # TODO find a way to send the payment method id to Adyen servers and get
-      # it back here to make sure we find the right payment method
+      def payment
+        payment_id = params[:merchant_reference].split('-')[-1]
+        @payment ||= current_order.payments.find(payment_id)
+      end
+
       def payment_method
-        @payment_method ||= Gateway::AdyenHPP.last # find(params[:merchantReturnData])
+        @payment_method ||= payment.payment_method
       end
 
       def authorized?
