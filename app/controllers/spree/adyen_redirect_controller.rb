@@ -13,7 +13,7 @@ module Spree
       # cant set payment to complete here due to a validation
       # in order transition from payment to complete (it requires at
       # least one pending payment)
-      payment.update!({ response_code: params[:pspReference] }) if payment_method.response_code != params[:pspReference]
+      payment.update!({ response_code: params[:pspReference] }) if payment.response_code != params[:pspReference]
 
       order.next
 
