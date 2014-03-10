@@ -1,0 +1,29 @@
+<div class="row">
+  <div class="alpha omega twelve columns">
+    <fieldset>
+      <legend align="center"><%= Spree.t(:details) %></legend>
+      <dl>
+        <dt><%= Spree.t(:message) %></dt>
+        <dd><%= entry.parsed_details.message %></dd>
+        <dt><%= Spree.t(:success) %></dt>
+        <dd><%= entry.parsed_details.success %></dd>
+        <dt><%= Spree.t(:test) %></dt>
+        <dd><%= entry.parsed_details.test %></dd>
+      </dl>
+    </fieldset>
+  </div>
+</div>
+
+<div class="row">
+  <div class="alpha omega twelve columns">
+    <fieldset>
+      <legend align="center"><%= Spree.t(:parameters) %></legend>
+      <dl>
+        <% entry.parsed_details.params.each do |key, value| %>
+          <dt><%= key.humanize %></dt>
+          <dd><%= value %></dd>
+        <% end %>
+      </dl>
+    </fieldset>
+  </div>
+</div>
