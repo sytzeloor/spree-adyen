@@ -99,6 +99,8 @@ class AdyenNotification < ActiveRecord::Base
         end
       end
     end
+
+    order.update!
   end
 
   def payment

@@ -14,7 +14,7 @@ module Spree
       payment.update!({ response_code: params[:pspReference] }) if payment.response_code != params[:pspReference]
 
       if order.total == order.payment_total || order.total == order.payments.where(state: %w(checkout pending processing complete)).map(&:amount).sum
-        order.update({ state: 'complete' })
+        order.update({ state: 'complete', completed_at: Time.now })
         order.finalize!
 
         flash.notice = Spree.t(:order_processed_successfully)
