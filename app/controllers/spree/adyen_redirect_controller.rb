@@ -13,7 +13,10 @@ module Spree
       # least one pending payment)
       payment.update!({ response_code: params[:pspReference] }) if payment.response_code != params[:pspReference]
 
-      if order.total == order.payment_total || order.total == order.payments.where(state: %w(checkout pending processing complete)).map(&:amount).sum
+      if order.total == order.payment_total ||
+        order.total == order.payments.where(state: %w(checkout pending processing complete)).map(&:amount).sum ||
+        (authorized? && success?)
+
         order.update({ state: 'complete', completed_at: Time.now })
         order.finalize!
 
@@ -47,6 +50,10 @@ module Spree
 
     def authorized?
       params[:authResult] == "AUTHORISED"
+    end
+
+    def success?
+      params[:success] == 'true'
     end
   end
 end
