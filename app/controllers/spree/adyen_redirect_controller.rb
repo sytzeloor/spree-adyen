@@ -19,7 +19,7 @@ module Spree
         order.total == order.payments.where(state: %w(checkout pending processing complete)).map(&:amount).sum ||
         (authorized? && success?)
 
-        payment.log_entries.create!({ details: ActiveMerchant::Billing::Response(success?, 'Completing order', params, options) })
+        payment.log_entries.create!({ details: ActiveMerchant::Billing::Response.new(success?, 'Completing order', params, options) })
 
         order.update({ state: 'complete', completed_at: Time.now })
         order.finalize!
@@ -27,7 +27,7 @@ module Spree
         flash.notice = Spree.t(:order_processed_successfully)
         redirect_to order_path(order, token: order.token)
       else
-        payment.log_entries.create!({ details: ActiveMerchant::Billing::Response(success?, 'Returning to checkout', params, options) })
+        payment.log_entries.create!({ details: ActiveMerchant::Billing::Response.new(success?, 'Returning to checkout', params, options) })
         redirect_to checkout_state_path(order.state)
       end
     end
