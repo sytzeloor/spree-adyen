@@ -106,7 +106,7 @@ class AdyenNotification < ActiveRecord::Base
     params = self.attributes
     options = { test: !Rails.env.production? }
 
-    payment.log_entries.create!({ details: ActiveMerchant::Billing::Response.new(success?, message, params, options) })
+    payment.log_entries.create!({ details: ActiveMerchant::Billing::Response.new(success?, message, params, options).to_yaml })
 
     order.update!
   end
