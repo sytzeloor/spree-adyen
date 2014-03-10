@@ -6,9 +6,9 @@
         <dt><%= Spree.t(:message) %></dt>
         <dd><%= entry.parsed_details.message %></dd>
         <dt><%= Spree.t(:success) %></dt>
-        <dd><%= entry.parsed_details.success %></dd>
+        <dd><%= entry.parsed_details.success? %></dd>
         <dt><%= Spree.t(:test) %></dt>
-        <dd><%= entry.parsed_details.test %></dd>
+        <dd><%= entry.parsed_details.test? %></dd>
       </dl>
     </fieldset>
   </div>
