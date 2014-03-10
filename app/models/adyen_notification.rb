@@ -86,6 +86,7 @@ class AdyenNotification < ActiveRecord::Base
   def handle!
     if (authorisation? || authorised? || settled? || capture?) && !success?
       if payment && !payment.failed? && !payment.invalid?
+        message = 'Payment invalidated'
         payment.invalidate!
       end
     end
@@ -93,12 +94,19 @@ class AdyenNotification < ActiveRecord::Base
     if authorisation? || authorised? || settled?
       if payment && !payment.failed? && !payment.invalid?
         if success?
+          message = 'Payment completed'
           payment.complete!
         else
+          message = 'Payment failed'
           payment.failure!
         end
       end
     end
+
+    params = self.attributes
+    options = { test: !Rails.env.production? }
+
+    payment.log_entries.create!({ details: ActiveMerchant::Billing::Response(success?, message, params, options) })
 
     order.update!
   end
