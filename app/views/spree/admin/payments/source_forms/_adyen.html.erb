@@ -1,0 +1,28 @@
+<% param_prefix = 'payment' %>
+
+<fieldset class="no-border-bottom hidden" data-payment-method-id="<%= payment_method.id %>">
+  <div id="adyen_form" data-hook>
+    <div class="alpha eight columns">
+      <div data-hook="response_code">
+        <div class="field">
+          <%= label_tag 'response_code', raw(Spree.t(:response_code) + content_tag(:span, ' *', class: 'required')) %>
+          <%= text_field_tag "#{param_prefix}[response_code]", @payment.response_code, class: 'required fullwidth', id: 'response_code' %>
+        </div>
+      </div>
+    </div>
+    <div class="clear"></div>
+  </div>
+</fieldset>
+
+<script>
+  $(document).ready(function() {
+    $('[name="payment[payment_method_id]"][value="<%= payment_method.id %>"]').change(function() {
+      if($(this).attr('checked') == 'checked') {
+        $('fieldset[data-payment-method-id]').addClass('hidden').find(':input').attr('disabled', 'disabled');
+        $('fieldset[data-payment-method-id="<%= payment_method.id %>"]').removeClass('hidden').find(':input').removeAttr('disabled');
+      } else {
+        $('fieldset[data-payment-method-id="<%= payment_method.id %>"]').addClass('hidden').find(':input').attr('disabled', 'disabled');
+      }
+    }).change();
+  });
+</script>
