@@ -108,7 +108,7 @@ class AdyenNotification < ActiveRecord::Base
 
     payment.log_entries.create!({ details: ActiveMerchant::Billing::Response.new(success?, message, params, options).to_yaml })
 
-    order.update!
+    payment.order.update!
   end
 
   def payment
