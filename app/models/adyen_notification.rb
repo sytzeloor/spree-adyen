@@ -25,7 +25,7 @@ class AdyenNotification < ActiveRecord::Base
 
   # A notification should be unique using the composed key of
   # [:psp_reference, :event_code, :success]
-  validates_uniqueness_of :success, :scope => [:psp_reference, :event_code]
+  # validates_uniqueness_of :success, :scope => [:psp_reference, :event_code]
 
   # Make sure we don't end up with an original_reference with an empty string
   before_validation { |notification| notification.original_reference = nil if notification.original_reference.blank? }
@@ -92,7 +92,7 @@ class AdyenNotification < ActiveRecord::Base
     end
 
     if authorisation? || authorised? || settled? || capture?
-      if payment && !payment.failed? && !payment.invalid?
+      if payment && !payment.failed? && !payment.invalid? && !payment.complete?
         if success?
           if payment.pending?
             message = 'Payment completed'
