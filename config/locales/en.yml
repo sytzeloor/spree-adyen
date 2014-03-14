@@ -1,0 +1,3 @@
+en:
+  spree:
+    order_processed_but_pending: 'Your order has been processed, but your payment is still pending'

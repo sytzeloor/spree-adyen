@@ -3,7 +3,7 @@ module Spree
     before_filter :check_signature, only: :confirm
 
     def confirm
-      unless authorized?
+      if !authorized? && !pending?
         flash.notice = Spree.t(:payment_processing_failed)
         redirect_to checkout_state_path(order.state) and return
       end
@@ -24,7 +24,12 @@ module Spree
         order.update({ state: 'complete', completed_at: Time.now })
         order.finalize!
 
-        flash.notice = Spree.t(:order_processed_successfully)
+        if pending?
+          flash.notice = Spree.t(:order_processed_but_pending)
+        else
+          flash.notice = Spree.t(:order_processed_successfully)
+        end
+
         redirect_to order_path(order, token: order.token)
       else
         payment.log_entries.create!({ details: ActiveMerchant::Billing::Response.new(false, 'Returning to checkout', params, options).to_yaml })
@@ -55,6 +60,10 @@ module Spree
 
     def authorized?
       params[:authResult] == "AUTHORISED"
+    end
+
+    def pending?
+      params[:authResult] == "PENDING"
     end
 
     def success?
