@@ -1,6 +1,6 @@
 # @private
 class CreateAdyenNotifications < ActiveRecord::Migration
-  
+
   def self.up
     create_table :adyen_notifications do |t|
       t.boolean  :live,                  :null => false, :default => false
@@ -19,8 +19,8 @@ class CreateAdyenNotifications < ActiveRecord::Migration
       t.boolean  :processed,             :null => false, :default => false
       t.timestamps
     end
-     
-    add_index :adyen_notifications, [:psp_reference, :event_code, :success], :unique => true, :name => 'adyen_notification_uniqueness'
+
+    add_index :adyen_notifications, [:psp_reference, :event_code, :success], :name => 'adyen_notification_uniqueness'
   end
 
   def self.down

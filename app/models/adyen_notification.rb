@@ -92,7 +92,7 @@ class AdyenNotification < ActiveRecord::Base
     end
 
     if authorisation? || authorised? || settled? || capture?
-      if payment && !payment.failed? && !payment.invalid? && !payment.complete?
+      if payment && !payment.failed? && !payment.invalid? && !payment.completed?
         if success?
           if payment.pending?
             message = 'Payment completed'
