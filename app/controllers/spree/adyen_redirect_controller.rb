@@ -17,7 +17,7 @@ module Spree
 
       if order.total == order.payment_total ||
         order.total == order.payments.where(state: %w(checkout pending processing complete)).map(&:amount).sum ||
-        (authorized? && success?)
+        authorized?
 
         payment.log_entries.create!({ details: ActiveMerchant::Billing::Response.new(success?, 'Completing order', params, options).to_yaml })
 
