@@ -20,6 +20,7 @@ module Spree
       initializer "spree.spree-adyen.payment_methods", :after => "spree.register.payment_methods" do |app|
         app.config.spree.payment_methods << Gateway::AdyenPayment
         app.config.spree.payment_methods << Gateway::AdyenHPP
+        app.config.spree.payment_methods << PaymentMethod::Custom
       end
     end
   end

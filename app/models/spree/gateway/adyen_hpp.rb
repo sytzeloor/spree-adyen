@@ -7,7 +7,7 @@ module Spree
     preference :shared_secret, :string
 
     def source_required?
-      true
+      false
     end
 
     def auto_capture?
