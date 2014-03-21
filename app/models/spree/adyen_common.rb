@@ -53,6 +53,20 @@ module Spree
         end
         response
       end
+
+      def credit(response_code, gateway_options = {})
+        response = provider.cancel_payment(response_code)
+
+        if response.success?
+          def response.authorization; psp_reference; end
+        else
+          # TODO confirm the error response will always have these two methods
+          def response.to_s
+            "#{result_code} - #{refusal_reason}"
+          end
+        end
+        response
+      end
     end
 
     module ClassMethods
