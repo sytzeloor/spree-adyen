@@ -5,6 +5,7 @@ module Spree
 
     preference :skin_code, :string
     preference :shared_secret, :string
+    preference :allowed_methods, :string
 
     def source_required?
       false
@@ -45,7 +46,8 @@ module Spree
         merchant_account: preferred_merchant_account,
         skin_code: preferred_skin_code,
         shared_secret: preferred_shared_secret,
-        payment_amount: (payment.amount.to_f * 100).to_int
+        payment_amount: (payment.amount.to_f * 100).to_int,
+        allowed_methods: preferred_allowed_methods
       }
 
       ::Adyen::Form.redirect_url(
