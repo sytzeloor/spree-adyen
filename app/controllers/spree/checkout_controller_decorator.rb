@@ -18,10 +18,12 @@ module Spree
       payment_method = Spree::PaymentMethod.find(params[:order][:payments_attributes].first[:payment_method_id])
 
       if payment_method.kind_of?(Gateway::AdyenHPP)
+        @order.update!
+
         payment = @order.payments.where({ payment_method_id: payment_method.id, state: ['checkout', 'pending', 'processing'] }).first
         payment ||= @order.payments.create!({
           payment_method_id: payment_method.id,
-          amount: @order.total
+          amount: @order.outstanding_balance
         })
 
         redirect_to payment_method.redirect_url(payment, adyen_confirmation_url)
