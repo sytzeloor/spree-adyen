@@ -30,7 +30,7 @@ module Spree
           flash.notice = Spree.t(:order_processed_successfully)
         end
 
-        redirect_to order_path(order, token: order.token)
+        redirect_to order_path(order, token: order.token, google_tracker: true)
       else
         payment.log_entries.create!({ details: ActiveMerchant::Billing::Response.new(false, 'Returning to checkout', params, options).to_yaml })
         redirect_to checkout_state_path(order.state)
