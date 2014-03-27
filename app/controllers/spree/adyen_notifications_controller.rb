@@ -7,7 +7,7 @@ module Spree
     def notify
       @notification = AdyenNotification.log(params)
       @notification.handle!
-    rescue ActiveRecord::RecordNotUnique, ActiveRecord::RecordInvalid => e
+    rescue ActiveRecord::RecordNotUnique, ActiveRecord::RecordInvalid, ActiveRecord::RecordNotFound => e
       # Validation failed, because of the duplicate check.
       # So ignore this notification, it is already stored and handled.
     ensure
