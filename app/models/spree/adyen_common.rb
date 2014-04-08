@@ -54,7 +54,7 @@ module Spree
         response
       end
 
-      def credit(response_code, gateway_options = {})
+      def credit(credit_cents, response_code, gateway_options = {})
         response = provider.cancel_payment(response_code)
 
         if response.success?
