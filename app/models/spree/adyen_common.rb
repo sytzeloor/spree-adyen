@@ -62,7 +62,7 @@ module Spree
         else
           # TODO confirm the error response will always have these two methods
           def response.to_s
-            "#{result_code} - #{refusal_reason}"
+            "#{response}"
           end
         end
         response

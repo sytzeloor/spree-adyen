@@ -4,23 +4,32 @@
       <legend align="center"><%= Spree.t(:details) %></legend>
       <dl>
         <dt><%= Spree.t(:message) %></dt>
-        <dd><%= entry.parsed_details.message %></dd>
+        <dd>
+          <% if entry.parsed_details.respond_to?(:message) %>
+            <%= entry.parsed_details.message %></dd>
+          <% else %>
+            <%= entry.parsed_details.body %></dd>
+          <% end %>
         <dt><%= Spree.t(:success) %></dt>
         <dd><%= entry.parsed_details.success? %></dd>
-        <dt><%= Spree.t(:test) %></dt>
-        <dd><%= entry.parsed_details.test? %></dd>
-      </dl>
-    </fieldset>
-  </div>
-  <div class="omega eight columns">
-    <fieldset>
-      <legend align="center"><%= Spree.t(:parameters) %></legend>
-      <dl>
-        <% entry.parsed_details.params.each do |key, value| %>
-          <dt><%= key.humanize %></dt>
-          <dd><%= value %></dd>
+        <% if entry.parsed_details.respond_to?(:test?) %>
+          <dt><%= Spree.t(:test) %></dt>
+          <dd><%= entry.parsed_details.test? %></dd>
         <% end %>
       </dl>
     </fieldset>
   </div>
+  <% if entry.parsed_details.respond_to?(:parameters) %>
+    <div class="omega eight columns">
+      <fieldset>
+        <legend align="center"><%= Spree.t(:parameters) %></legend>
+        <dl>
+          <% entry.parsed_details.params.each do |key, value| %>
+            <dt><%= key.humanize %></dt>
+            <dd><%= value %></dd>
+          <% end %>
+        </dl>
+      </fieldset>
+    </div>
+  <% end %>
 </div>
