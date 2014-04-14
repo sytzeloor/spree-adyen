@@ -69,6 +69,10 @@ class AdyenNotification < ActiveRecord::Base
     event_code == 'SETTLED'
   end
 
+  def cancellation?
+    event_code == 'CANCELLATION'
+  end
+
   alias_method :authorization?, :authorisation?
   alias_method :authorized?, :authorised?
 
@@ -94,17 +98,17 @@ class AdyenNotification < ActiveRecord::Base
     if authorisation? || authorised? || settled? || capture?
       if payment && !payment.failed? && !payment.invalid? && !payment.completed?
         if success?
-          # if payment.pending?
-            message = 'Payment completed'
-            payment.complete!
-          # else
-          #   message = 'Payment pending'
-          #   payment.pend!
-          # end
+          message = 'Payment completed'
+          payment.complete!
         else
           message = 'Payment failed'
           payment.failure!
         end
+      end
+    elsif cancellation?
+      if success?
+        message = 'Payment canceled'
+        payment.void!
       end
     end
 
