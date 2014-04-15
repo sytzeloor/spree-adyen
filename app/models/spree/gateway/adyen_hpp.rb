@@ -19,7 +19,7 @@ module Spree
     # Adyen Hosted Payment Pages where we wouldn't keep # the credit card object
     # as that entered outside of the store forms
     def actions
-      %w{capture void credit}
+      %w{credit}
     end
 
     # Indicates whether its possible to void the payment.
