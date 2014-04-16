@@ -40,24 +40,25 @@ module Spree
       # According to Spree Processing class API the response object should respond
       # to an authorization method which return value should be assigned to payment
       # response_code
-      # def void(response_code, gateway_options = {})
-      #   response = provider.cancel_payment(response_code)
+      def void(response_code, gateway_options = {})
+        response = nil
 
-      #   if response.success?
-      #     def response.authorization; psp_reference; end
-      #   else
-      #     # TODO confirm the error response will always have these two methods
-      #     def response.to_s
-      #       "#{result_code} - #{refusal_reason}"
-      #     end
-      #   end
-      #   response
-      # end
+        if Spree::Payment.where(response_code: response_code).first!.void!
+          def response.success?; true; end
+          def response.authorization; nil; end
+        else
+          # TODO confirm the error response will always have these two methods
+          def response.to_s
+            "#{response}"
+          end
+        end
+        response
+      end
 
       def credit(credit_cents, response_code, gateway_options = {})
         response = nil
 
-        if Spree::Payment.where(response_code: response_code).first!.void!
+        if true
           def response.success?; true; end
           def response.authorization; nil; end
         else
